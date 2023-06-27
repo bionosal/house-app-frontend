@@ -1,4 +1,5 @@
 import useSWR from "swr";
+
 import { Post } from "../types";
 
 const fetcher = (url: string): Promise<Post[]> =>

@@ -1,13 +1,13 @@
 import React from "react";
 import { AppRoutes } from "./routes";
 import { NavBar } from "./components";
-import "./App.scss";
+import styles from "./App.module.scss";
 function App() {
   return (
-    <div className="App">
-      <main className="main">
+    <div className={styles.app}>
+      <main className={styles.main}>
         <NavBar />
-        <div className="content">
+        <div className={styles.content}>
           <AppRoutes />
         </div>
       </main>

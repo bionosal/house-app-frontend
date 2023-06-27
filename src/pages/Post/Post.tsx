@@ -1,17 +1,14 @@
 import React, { useEffect, useRef } from "react";
+import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { KeyedMutator } from "swr";
 
-import "./Post.scss";
-import { usePosts } from "../../hooks";
-import {
-  FormContainer,
-  TextFieldElement,
-  useFormContext,
-} from "react-hook-form-mui";
-import { IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { IconButton } from "@mui/material";
+
+import { usePosts } from "../../hooks";
+import styles from "./Post.module.scss";
 import { Post } from "../../types";
-import { KeyedMutator } from "swr";
 
 type AddPostProps = {
   author: string;
@@ -20,7 +17,6 @@ type AddPostProps = {
 };
 export function Posts() {
   const { posts = [], isLoading, isError, mutate } = usePosts();
-  const { reset } = useFormContext();
   const postListRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const container = postListRef.current;
@@ -53,15 +49,15 @@ export function Posts() {
       .catch((err: Error) => alert(err.message));
   };
   return (
-    <div className="container">
-      <div className="postList" ref={postListRef}>
+    <div className={styles.container}>
+      <div className={styles.postList} ref={postListRef}>
         {posts.map((post) => (
           <PostList post={post} mutate={mutate} />
         ))}
       </div>
-      <div className="postAdd">
+      <div className={styles.postAdd}>
         <FormContainer onSuccess={handleSubmit}>
-          <div className="postAddInfo">
+          <div className={styles.postAddInfo}>
             <TextFieldElement
               name="title"
               label="Tytuł"
@@ -83,7 +79,7 @@ export function Posts() {
             fullWidth
             multiline
           />
-          <div className="postAddSubmit">
+          <div className={styles.postAddSubmit}>
             <IconButton type="submit">
               <SendIcon />
             </IconButton>
@@ -114,13 +110,13 @@ function PostList({ post, mutate }: PostListProps) {
       .catch((err: Error) => alert(err.message));
   };
   return (
-    <div className="postDiv">
+    <div className={styles.postDiv}>
       <div>
-        <div className="postInfo">
+        <div className={styles.postInfo}>
           <div>{post.author}</div>
           <div>{post.created_on.slice(0, 19).replace("T", " ")}</div>
         </div>
-        <div className="postContent">
+        <div className={styles.postContent}>
           <h3>{post.title}</h3>
 
           {post.content}
