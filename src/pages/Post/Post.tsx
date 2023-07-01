@@ -9,6 +9,7 @@ import { IconButton } from "@mui/material";
 import { usePosts } from "../../hooks";
 import styles from "./Post.module.scss";
 import { Post } from "../../types";
+import { API_URL } from "../../config";
 
 type AddPostProps = {
   author: string;
@@ -29,7 +30,7 @@ export function Posts() {
   if (isError) return <div>error</div>;
 
   const handleSubmit = (data: AddPostProps) => {
-    fetch("http://localhost:8000/posts/", {
+    fetch(`${API_URL}/posts/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,7 +98,7 @@ type PostListProps = {
 
 function PostList({ post, mutate }: PostListProps) {
   const handleDelete = () => {
-    fetch(`http://localhost:8000/posts/${post.id}`, {
+    fetch(`${API_URL}/posts/${post.id}`, {
       method: "DELETE",
     })
       .then((response) => {

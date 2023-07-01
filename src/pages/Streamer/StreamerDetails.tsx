@@ -7,6 +7,7 @@ import { Avatar, Chip } from "@mui/material";
 
 import { useStreamer } from "../../hooks/streamer";
 import styles from "./StreamerDetails.module.scss";
+import { API_URL } from "../../config";
 
 export function StreamerDetails() {
   const { id } = useParams();
@@ -16,8 +17,8 @@ export function StreamerDetails() {
   if (isError) return <div className={styles.container}>error</div>;
 
   const handleVote = (vote: "upvote" | "downvote") => {
-    fetch(`http://localhost:8000/streamers/${id}/vote`, {
-      method: "PUT",
+    fetch(`${API_URL}/streamers/${id}/vote`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

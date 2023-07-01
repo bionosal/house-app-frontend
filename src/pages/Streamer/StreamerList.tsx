@@ -28,6 +28,7 @@ import {
 import { useStreamers } from "../../hooks/streamer";
 import { Streamer } from "../../types";
 import styles from "./StreamerList.module.scss";
+import { API_URL } from "../../config";
 
 export function StreamerList() {
   const { streamers = [], isLoading, isError, mutate } = useStreamers();
@@ -126,7 +127,7 @@ function StreamerForm({ mutate }: StreamerFormProps) {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    fetch("http://localhost:8000/streamers/", {
+    fetch(`${API_URL}/streamers/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
