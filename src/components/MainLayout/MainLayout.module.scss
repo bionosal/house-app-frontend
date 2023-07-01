@@ -1,16 +1,18 @@
-.app {
-  text-align: center;
+.layout {
+  background-color: #282c34;
+  min-height: 100vh;
 }
 
 .main {
-  background-color: #282c34;
-  min-height: 100vh;
-  font-size: calc(10px + 2vmin);
-}
-
-.content {
   height: 92vh;
   padding: 2rem;
   box-sizing: border-box;
   overflow: hidden;
+  font-size: calc(10px + 2vmin);
+}
+
+.toaster {
+  display: flex;
+  width: 1000px;
+  min-width: 1000px;
 }

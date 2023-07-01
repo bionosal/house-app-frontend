@@ -8,6 +8,8 @@ import { Avatar, Chip } from "@mui/material";
 import { useStreamer } from "../../hooks/streamer";
 import styles from "./StreamerDetails.module.scss";
 import { API_URL } from "../../config";
+import { jsonFetcher } from "../../utils";
+import toast from "react-hot-toast";
 
 export function StreamerDetails() {
   const { id } = useParams();
@@ -17,41 +19,25 @@ export function StreamerDetails() {
   if (isError) return <div className={styles.container}>error</div>;
 
   const handleVote = (vote: "upvote" | "downvote") => {
-    fetch(`${API_URL}/streamers/${id}/vote`, {
+    jsonFetcher(`${API_URL}/streamers/${id}/vote`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ vote: vote }),
     })
-      .then(async (response) => {
-        if (response.ok) {
-          return;
-        } else {
-          let err: Error;
-          try {
-            err = Error(JSON.stringify(await response.json()));
-          } catch {
-            err = Error("Something went wrong");
-          }
-          throw err;
-        }
-      })
-      .then((result) => {
+      .then(() => {
+        toast.success("Vote has been added");
         mutate();
       })
-      .catch((err: Error) => alert(err.message));
+      .catch((err: Error) => toast.error(err.message));
   };
   return (
     <div className={styles.container}>
       {streamer && (
         <>
           <div className={styles.streamerInfo}>
-            <Avatar
-              alt={streamer.name}
-              src={streamer.avatar}
-              className={styles.avatar}
-            />
+            <Avatar src={streamer.avatar} className={styles.avatar} />
             <dl className={styles.nameAndPlatform}>
               <dt>Name:</dt>
               <dd>{streamer.name}</dd>

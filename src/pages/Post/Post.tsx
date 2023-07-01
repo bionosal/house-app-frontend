@@ -10,6 +10,8 @@ import { usePosts } from "../../hooks";
 import styles from "./Post.module.scss";
 import { Post } from "../../types";
 import { API_URL } from "../../config";
+import { jsonFetcher } from "../../utils";
+import toast from "react-hot-toast";
 
 type AddPostProps = {
   author: string;
@@ -30,24 +32,17 @@ export function Posts() {
   if (isError) return <div>error</div>;
 
   const handleSubmit = (data: AddPostProps) => {
-    fetch(`${API_URL}/posts/`, {
+    jsonFetcher(`${API_URL}/posts/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw Error("Coś poszło nie tak");
-        }
-      })
-      .then((result) => {
+      .then(() => {
         mutate();
       })
-      .catch((err: Error) => alert(err.message));
+      .catch((err: Error) => toast.error(err.message));
   };
   return (
     <div className={styles.container}>
@@ -98,17 +93,13 @@ type PostListProps = {
 
 function PostList({ post, mutate }: PostListProps) {
   const handleDelete = () => {
-    fetch(`${API_URL}/posts/${post.id}`, {
+    jsonFetcher(`${API_URL}/posts/${post.id}`, {
       method: "DELETE",
     })
-      .then((response) => {
-        if (response.ok) {
-          mutate();
-        } else {
-          throw Error("Coś poszło nie tak");
-        }
+      .then(() => {
+        mutate();
       })
-      .catch((err: Error) => alert(err.message));
+      .catch((err: Error) => toast.error(err.message));
   };
   return (
     <div className={styles.postDiv}>

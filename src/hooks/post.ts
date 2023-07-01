@@ -2,14 +2,12 @@ import useSWR from "swr";
 
 import { Post } from "../types";
 import { API_URL } from "../config";
-
-const fetcher = (url: string): Promise<Post[]> =>
-  fetch(url).then((res) => res.json());
+import { jsonFetcher } from "../utils";
 
 export function usePosts() {
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<Post[]>(
     `${API_URL}/posts`,
-    fetcher
+    jsonFetcher
   );
 
   return {

@@ -2,17 +2,12 @@ import useSWR from "swr";
 
 import { Streamer } from "../types";
 import { API_URL } from "../config";
-
-const fetcherStreamers = (url: string): Promise<Streamer[]> =>
-  fetch(url).then((res) => res.json());
-
-const fetcherStreamer = (url: string): Promise<Streamer> =>
-  fetch(url).then((res) => res.json());
+import { jsonFetcher } from "../utils";
 
 export function useStreamers() {
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<Streamer[]>(
     `${API_URL}/streamers`,
-    fetcherStreamers
+    jsonFetcher
   );
 
   return {
@@ -24,9 +19,9 @@ export function useStreamers() {
 }
 
 export function useStreamer(streamerId: number) {
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<Streamer>(
     `${API_URL}/streamers/${streamerId}`,
-    fetcherStreamer
+    jsonFetcher
   );
 
   return {

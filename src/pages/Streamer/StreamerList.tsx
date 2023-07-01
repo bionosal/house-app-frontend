@@ -29,6 +29,8 @@ import { useStreamers } from "../../hooks/streamer";
 import { Streamer } from "../../types";
 import styles from "./StreamerList.module.scss";
 import { API_URL } from "../../config";
+import { jsonFetcher } from "../../utils";
+import toast from "react-hot-toast";
 
 export function StreamerList() {
   const { streamers = [], isLoading, isError, mutate } = useStreamers();
@@ -48,12 +50,17 @@ export function StreamerList() {
 type StreamerTableProps = {
   streamers: Streamer[];
   isLoading: boolean;
-  isError: boolean;
+  isError: any;
 };
 
 function StreamerTable({ streamers, isLoading, isError }: StreamerTableProps) {
   if (isLoading) return <div className={styles.streamerTable}>loading ...</div>;
-  if (isError) return <div className={styles.streamerTable}>error</div>;
+  if (isError) {
+    if (isError.message) {
+      return <div className={styles.streamerTable}>{isError.message}</div>;
+    }
+    return <div className={styles.streamerTable}>Unknown Error occured</div>;
+  }
 
   return (
     <div className={styles.streamerTable}>
@@ -75,7 +82,7 @@ function StreamerTable({ streamers, isLoading, isError }: StreamerTableProps) {
             <TableRow key={streamer.id}>
               <TableCell align="right">
                 <div className={styles.avatarCell}>
-                  <Avatar alt={streamer.name} src={streamer.avatar} />
+                  <Avatar src={streamer.avatar} />
                   <a href={`/streamers/${streamer.id}`}>{streamer.name}</a>
                 </div>
               </TableCell>
@@ -127,31 +134,19 @@ function StreamerForm({ mutate }: StreamerFormProps) {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    fetch(`${API_URL}/streamers/`, {
+    jsonFetcher(`${API_URL}/streamers/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
     })
-      .then(async (response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          let err: Error;
-          try {
-            err = Error(JSON.stringify(await response.json()));
-          } catch {
-            err = Error("Something went wrong");
-          }
-          throw err;
-        }
-      })
-      .then((result) => {
+      .then(() => {
+        toast.success("Streamer has been added");
         mutate();
         setFormData({ ...defaultFormData });
       })
-      .catch((err: Error) => alert(err.message));
+      .catch((err: Error) => toast.error(err.message));
   };
 
   return (
@@ -237,11 +232,7 @@ function StreamerForm({ mutate }: StreamerFormProps) {
               </Button>
             </DialogActions>
           </Dialog>
-          <Avatar
-            alt={"streamer avatar"}
-            src={formData.avatar}
-            className={styles.streamerAvatar}
-          />
+          <Avatar src={formData.avatar} className={styles.streamerAvatar} />
         </div>
         <TextField
           value={formData.description}
